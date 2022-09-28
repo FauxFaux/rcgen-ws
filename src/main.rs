@@ -6,7 +6,7 @@ use rcgen::{Certificate, CertificateParams,
 use std::fs;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-	let mut params :CertificateParams = Default::default();
+	let mut params: CertificateParams = Default::default();
 	params.not_before = date_time_ymd(1975, 01, 01);
 	params.not_after = date_time_ymd(4096, 01, 01);
 	params.distinguished_name = DistinguishedName::new();

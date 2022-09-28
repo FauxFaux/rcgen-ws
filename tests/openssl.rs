@@ -13,7 +13,7 @@ use std::rc::Rc;
 
 mod util;
 
-fn verify_cert_basic(cert :&Certificate) {
+fn verify_cert_basic(cert: &Certificate) {
 	let cert_pem = cert.serialize_pem().unwrap();
 	println!("{}", cert_pem);
 
@@ -21,7 +21,7 @@ fn verify_cert_basic(cert :&Certificate) {
 	let mut builder = X509StoreBuilder::new().unwrap();
 	builder.add_cert(x509.clone()).unwrap();
 
-	let store :X509Store = builder.build();
+	let store: X509Store = builder.build();
 	let mut ctx = X509StoreContext::new().unwrap();
 	let mut stack = Stack::new().unwrap();
 	stack.push(x509.clone()).unwrap();
@@ -38,10 +38,10 @@ struct PipeInner([Vec<u8>; 2]);
 
 #[derive(Debug)]
 struct PipeEnd {
-	read_pos :usize,
+	read_pos: usize,
 	/// Which end of the pipe
-	end_idx :usize,
-	inner :Rc<RefCell<PipeInner>>,
+	end_idx: usize,
+	inner: Rc<RefCell<PipeInner>>,
 }
 
 fn create_pipe() -> (PipeEnd, PipeEnd) {
@@ -82,7 +82,7 @@ impl Read for PipeEnd {
 	}
 }
 
-fn verify_cert(cert :&Certificate) {
+fn verify_cert(cert: &Certificate) {
 	verify_cert_basic(cert);
 	let cert_pem = cert.serialize_pem().unwrap();
 	let key = cert.serialize_private_key_der();
@@ -90,7 +90,7 @@ fn verify_cert(cert :&Certificate) {
 	verify_cert_ca(&cert_pem, &key, &cert_pem);
 }
 
-fn verify_cert_ca(cert_pem :&str, key :&[u8], ca_cert_pem :&str) {
+fn verify_cert_ca(cert_pem: &str, key :&[u8], ca_cert_pem: &str) {
 	println!("{}", cert_pem);
 	println!("{}", ca_cert_pem);
 
@@ -102,7 +102,7 @@ fn verify_cert_ca(cert_pem :&str, key :&[u8], ca_cert_pem :&str) {
 	let mut builder = X509StoreBuilder::new().unwrap();
 	builder.add_cert(ca_x509).unwrap();
 
-	let store :X509Store = builder.build();
+	let store: X509Store = builder.build();
 
 	let srv = SslMethod::tls_server();
 	let mut ssl_srv_ctx = SslAcceptor::mozilla_modern(srv).unwrap();
@@ -156,7 +156,7 @@ fn verify_cert_ca(cert_pem :&str, key :&[u8], ca_cert_pem :&str) {
 	// TODO read the data we just wrote from the streams
 }
 
-fn verify_csr(cert :&Certificate) {
+fn verify_csr(cert: &Certificate) {
 	let csr = cert.serialize_request_pem().unwrap();
 	println!("{}", csr);
 	let key = cert.serialize_private_key_der();

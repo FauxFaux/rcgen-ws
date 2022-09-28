@@ -13,7 +13,7 @@ use std::convert::TryFrom;
 
 mod util;
 
-fn sign_msg_ecdsa(cert :&Certificate, msg :&[u8], alg :&'static EcdsaSigningAlgorithm) -> Vec<u8> {
+fn sign_msg_ecdsa(cert: &Certificate, msg :&[u8], alg :&'static EcdsaSigningAlgorithm) -> Vec<u8> {
 	let pk_der = cert.serialize_private_key_der();
 	let key_pair = EcdsaKeyPair::from_pkcs8(&alg, &pk_der).unwrap();
 	let system_random = SystemRandom::new();
@@ -21,14 +21,14 @@ fn sign_msg_ecdsa(cert :&Certificate, msg :&[u8], alg :&'static EcdsaSigningAlgo
 	signature.as_ref().to_vec()
 }
 
-fn sign_msg_ed25519(cert :&Certificate, msg :&[u8]) -> Vec<u8> {
+fn sign_msg_ed25519(cert: &Certificate, msg :&[u8]) -> Vec<u8> {
 	let pk_der = cert.serialize_private_key_der();
 	let key_pair = Ed25519KeyPair::from_pkcs8_maybe_unchecked(&pk_der).unwrap();
 	let signature = key_pair.sign(&msg);
 	signature.as_ref().to_vec()
 }
 
-fn sign_msg_rsa(cert :&Certificate, msg :&[u8], encoding :&'static dyn RsaEncoding) -> Vec<u8> {
+fn sign_msg_rsa(cert: &Certificate, msg :&[u8], encoding :&'static dyn RsaEncoding) -> Vec<u8> {
 	let pk_der = cert.serialize_private_key_der();
 	let key_pair = RsaKeyPair::from_pkcs8(&pk_der).unwrap();
 	let system_random = SystemRandom::new();
@@ -38,15 +38,15 @@ fn sign_msg_rsa(cert :&Certificate, msg :&[u8], encoding :&'static dyn RsaEncodi
 	signature
 }
 
-fn check_cert<'a, 'b>(cert_der :&[u8], cert :&'a Certificate, alg :&SignatureAlgorithm,
-		sign_fn :impl FnOnce(&'a Certificate, &'b [u8]) -> Vec<u8>) {
+fn check_cert<'a, 'b>(cert_der :&[u8], cert :&'a Certificate, alg: &SignatureAlgorithm,
+		sign_fn: impl FnOnce(&'a Certificate, &'b [u8]) -> Vec<u8>) {
 	println!("{}", cert.serialize_pem().unwrap());
 	check_cert_ca(cert_der, cert, cert_der, alg, alg, sign_fn);
 }
 
 fn check_cert_ca<'a, 'b>(cert_der :&[u8], cert :&'a Certificate, ca_der :&[u8],
-		cert_alg :&SignatureAlgorithm, ca_alg :&SignatureAlgorithm,
-		sign_fn :impl FnOnce(&'a Certificate, &'b [u8]) -> Vec<u8>) {
+		cert_alg: &SignatureAlgorithm, ca_alg: &SignatureAlgorithm,
+		sign_fn: impl FnOnce(&'a Certificate, &'b [u8]) -> Vec<u8>) {
 	let trust_anchor = TrustAnchor::try_from_cert_der(&ca_der).unwrap();
 	let trust_anchor_list = &[trust_anchor];
 	let trust_anchors = TlsServerTrustAnchors(trust_anchor_list);

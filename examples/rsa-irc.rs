@@ -10,7 +10,7 @@ use std::fs;
 use std::convert::TryFrom;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-	let mut params :CertificateParams = Default::default();
+	let mut params: CertificateParams = Default::default();
 	params.not_before = date_time_ymd(2021, 05, 19);
 	params.not_after = date_time_ymd(4096, 01, 01);
 	params.distinguished_name = DistinguishedName::new();
@@ -28,7 +28,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 	let pem_serialized = cert.serialize_pem()?;
 	let der_serialized = pem::parse(&pem_serialized).unwrap().contents;
 	let hash = ring::digest::digest(&ring::digest::SHA512, &der_serialized);
-	let hash_hex :String = hash.as_ref().iter()
+	let hash_hex: String = hash.as_ref().iter()
 		.map(|b| format!("{:02x}", b))
 		.collect();
 	println!("sha-512 fingerprint: {}", hash_hex);

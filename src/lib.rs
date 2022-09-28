@@ -54,8 +54,8 @@ use std::hash::{Hash, Hasher};
 
 /// A self signed certificate together with signing keys
 pub struct Certificate {
-	params :CertificateParams,
-	key_pair :KeyPair,
+	params: CertificateParams,
+	key_pair: KeyPair,
 }
 
 
@@ -83,7 +83,7 @@ println!("{}", cert.serialize_private_key_pem());
 # }
 ```
 */
-pub fn generate_simple_self_signed(subject_alt_names :impl Into<Vec<String>>) -> Result<Certificate, RcgenError> {
+pub fn generate_simple_self_signed(subject_alt_names: impl Into<Vec<String>>) -> Result<Certificate, RcgenError> {
 	Certificate::from_params(CertificateParams::new(subject_alt_names))
 }
 
@@ -161,7 +161,7 @@ pub enum SanType {
 
 impl SanType {
 	#[cfg(feature = "x509-parser")]
-	fn try_from_general(name :&x509_parser::extensions::GeneralName<'_>) -> Result<Self, RcgenError> {
+	fn try_from_general(name: &x509_parser::extensions::GeneralName<'_>) -> Result<Self, RcgenError> {
 		Ok(match name {
 			x509_parser::extensions::GeneralName::RFC822Name(name) => {
 				SanType::Rfc822Name((*name).into())
@@ -179,10 +179,10 @@ impl SanType {
 	fn tag(&self) -> u64 {
 		// Defined in the GeneralName list in
 		// https://tools.ietf.org/html/rfc5280#page-38
-		const TAG_RFC822_NAME :u64 = 1;
-		const TAG_DNS_NAME :u64 = 2;
-		const TAG_URI :u64 = 6;
-		const TAG_IP_ADDRESS :u64 = 7;
+		const TAG_RFC822_NAME: u64 = 1;
+		const TAG_DNS_NAME: u64 = 2;
+		const TAG_URI: u64 = 6;
+		const TAG_IP_ADDRESS: u64 = 7;
 
 		match self {
 			SanType::Rfc822Name(_name) => TAG_RFC822_NAME,
@@ -213,10 +213,10 @@ impl GeneralSubtree {
 	fn tag(&self) -> u64 {
 		// Defined in the GeneralName list in
 		// https://tools.ietf.org/html/rfc5280#page-38
-		const TAG_RFC822_NAME :u64 = 1;
-		const TAG_DNS_NAME :u64 = 2;
-		const TAG_DIRECTORY_NAME :u64 = 4;
-		const TAG_IP_ADDRESS :u64 = 7;
+		const TAG_RFC822_NAME: u64 = 1;
+		const TAG_DNS_NAME: u64 = 2;
+		const TAG_DIRECTORY_NAME: u64 = 4;
+		const TAG_IP_ADDRESS: u64 = 7;
 
 		match self {
 			GeneralSubtree::Rfc822Name(_name) => TAG_RFC822_NAME,
@@ -261,7 +261,7 @@ impl CidrSubnet {
 	/// let subnet = CidrSubnet::from_str("192.0.2.0/24").unwrap();
 	/// assert_eq!(subnet, CidrSubnet::V4([0xC0, 0x00, 0x02, 0x00], [0xFF, 0xFF, 0xFF, 0x00]));
 	/// ```
-	pub fn from_str(s :&str) -> Result<Self, ()> {
+	pub fn from_str(s: &str) -> Result<Self, ()> {
 		let mut iter = s.split('/');
 		if let (Some(addr_s), Some(prefix_s)) = (iter.next(), iter.next()) {
 			let addr = IpAddr::from_str(addr_s).map_err(|_| ())?;
@@ -284,7 +284,7 @@ impl CidrSubnet {
 	/// let subnet = CidrSubnet::from_addr_prefix(addr, 24);
 	/// assert_eq!(subnet, CidrSubnet::V4([0xC0, 0x00, 0x02, 0x00], [0xFF, 0xFF, 0xFF, 0x00]));
 	/// ```
-	pub fn from_addr_prefix(addr :IpAddr, prefix :u8) -> Self {
+	pub fn from_addr_prefix(addr: IpAddr, prefix: u8) -> Self {
 		match addr {
 			IpAddr::V4(addr) => {
 				Self::from_v4_prefix(addr.octets(), prefix)
@@ -296,12 +296,12 @@ impl CidrSubnet {
 	}
 	/// Obtains the CidrSubnet from an IPv4 address in network byte order
 	/// as well as the specified prefix.
-	pub fn from_v4_prefix(addr :[u8; 4], prefix :u8) -> Self {
+	pub fn from_v4_prefix(addr :[u8; 4], prefix: u8) -> Self {
 		CidrSubnet::V4(addr, mask!(u32, prefix))
 	}
 	/// Obtains the CidrSubnet from an IPv6 address in network byte order
 	/// as well as the specified prefix.
-	pub fn from_v6_prefix(addr :[u8; 16], prefix :u8) -> Self {
+	pub fn from_v6_prefix(addr :[u8; 16], prefix: u8) -> Self {
 		CidrSubnet::V6(addr, mask!(u128, prefix))
 	}
 	fn to_bytes(&self) -> Vec<u8> {
@@ -386,9 +386,9 @@ pub enum DnValue {
 
 impl<T> From<T> for DnValue
 where
-	T :Into<String>
+	T: Into<String>
 {
-	fn from(t :T) -> Self {
+	fn from(t: T) -> Self {
 		DnValue::Utf8String(t.into())
 	}
 }
@@ -405,8 +405,8 @@ See also the RFC 5280 sections on the [issuer](https://tools.ietf.org/html/rfc52
 and [subject](https://tools.ietf.org/html/rfc5280#section-4.1.2.6) fields.
 */
 pub struct DistinguishedName {
-	entries :HashMap<DnType, DnValue>,
-	order :Vec<DnType>,
+	entries: HashMap<DnType, DnValue>,
+	order: Vec<DnType>,
 }
 
 impl DistinguishedName {
@@ -418,7 +418,7 @@ impl DistinguishedName {
 		}
 	}
 	/// Obtains the attribute value for the given attribute type
-	pub fn get(&self, ty :&DnType) -> Option<&DnValue> {
+	pub fn get(&self, ty: &DnType) -> Option<&DnValue> {
 		self.entries.get(ty)
 	}
 	/// Removes the attribute with the specified DnType
@@ -426,7 +426,7 @@ impl DistinguishedName {
 	/// Returns true when an actual removal happened, false
 	/// when no attribute with the specified DnType was
 	/// found.
-	pub fn remove(&mut self, ty :DnType) -> bool {
+	pub fn remove(&mut self, ty: DnType) -> bool {
 		let removed = self.entries.remove(&ty).is_some();
 		if removed {
 			self.order.retain(|ty_o| &ty != ty_o);
@@ -443,7 +443,7 @@ impl DistinguishedName {
 	/// assert_eq!(dn.get(&DnType::OrganizationName), Some(&DnValue::Utf8String("Crab widgits SE".to_string())));
 	/// assert_eq!(dn.get(&DnType::CommonName), Some(&DnValue::PrintableString("Master Cert".to_string())));
 	/// ```
-	pub fn push(&mut self, ty :DnType, s :impl Into<DnValue>) {
+	pub fn push(&mut self, ty: DnType, s: impl Into<DnValue>) {
 		if !self.entries.contains_key(&ty) {
 			self.order.push(ty.clone());
 		}
@@ -452,13 +452,13 @@ impl DistinguishedName {
 	/// Iterate over the entries
 	pub fn iter(&self) -> DistinguishedNameIterator<'_> {
 		DistinguishedNameIterator {
-			distinguished_name :self,
-			iter :self.order.iter()
+			distinguished_name: self,
+			iter: self.order.iter()
 		}
 	}
 
 	#[cfg(feature = "x509-parser")]
-	fn from_name(name :&x509_parser::x509::X509Name) -> Result<Self, RcgenError> {
+	fn from_name(name: &x509_parser::x509::X509Name) -> Result<Self, RcgenError> {
 		use x509_parser::der_parser::asn1_rs::Tag;
 
 		let mut dn = DistinguishedName::new();
@@ -508,7 +508,7 @@ Iterator over [`DistinguishedName`] entries
 */
 pub struct DistinguishedNameIterator<'a> {
 	distinguished_name :&'a DistinguishedName,
-	iter :std::slice::Iter<'a, DnType>,
+	iter: std::slice::Iter<'a, DnType>,
 }
 
 impl <'a> Iterator for DistinguishedNameIterator<'a> {
@@ -543,8 +543,8 @@ impl PublicKeyData for PublicKey {
 /// Data for a certificate signing request
 #[allow(missing_docs)]
 pub struct CertificateSigningRequest {
-	pub params :CertificateParams,
-	pub public_key :PublicKey,
+	pub params: CertificateParams,
+	pub public_key: PublicKey,
 }
 
 impl CertificateSigningRequest {
@@ -552,7 +552,7 @@ impl CertificateSigningRequest {
 	///
 	/// See [`from_der`](Self::from_der) for more details.
 	#[cfg(all(feature = "pem", feature = "x509-parser"))]
-	pub fn from_pem(pem_str :&str) -> Result<Self, RcgenError> {
+	pub fn from_pem(pem_str: &str) -> Result<Self, RcgenError> {
 		let csr = pem::parse(pem_str)
 			.or(Err(RcgenError::CouldNotParseCertificationRequest))?;
 		Self::from_der(&csr.contents)
@@ -604,14 +604,14 @@ impl CertificateSigningRequest {
 		})
 	}
 	/// Serializes the requested certificate, signed with another certificate's key, in binary DER format
-	pub fn serialize_der_with_signer(&self, ca :&Certificate) -> Result<Vec<u8>, RcgenError> {
+	pub fn serialize_der_with_signer(&self, ca: &Certificate) -> Result<Vec<u8>, RcgenError> {
 		self.params.serialize_der_with_signer(&self.public_key, ca)
 	}
 	/// Serializes the requested certificate, signed with another certificate's key, to the ASCII PEM format
 	///
 	/// *This function is only available if rcgen is built with the "pem" feature*
 	#[cfg(feature = "pem")]
-	pub fn serialize_pem_with_signer(&self, ca :&Certificate) -> Result<String, RcgenError> {
+	pub fn serialize_pem_with_signer(&self, ca: &Certificate) -> Result<String, RcgenError> {
 		let p = Pem {
 			tag : "CERTIFICATE".to_string(),
 			contents : self.params.serialize_der_with_signer(&self.public_key, ca)?,
@@ -625,24 +625,24 @@ impl CertificateSigningRequest {
 #[non_exhaustive]
 pub struct CertificateParams {
 	pub alg :&'static SignatureAlgorithm,
-	pub not_before :OffsetDateTime,
-	pub not_after :OffsetDateTime,
-	pub serial_number :Option<u64>,
-	pub subject_alt_names :Vec<SanType>,
-	pub distinguished_name :DistinguishedName,
-	pub is_ca :IsCa,
-	pub key_usages :Vec<KeyUsagePurpose>,
-	pub extended_key_usages :Vec<ExtendedKeyUsagePurpose>,
-	pub name_constraints :Option<NameConstraints>,
-	pub custom_extensions :Vec<CustomExtension>,
+	pub not_before: OffsetDateTime,
+	pub not_after: OffsetDateTime,
+	pub serial_number: Option<u64>,
+	pub subject_alt_names: Vec<SanType>,
+	pub distinguished_name: DistinguishedName,
+	pub is_ca: IsCa,
+	pub key_usages: Vec<KeyUsagePurpose>,
+	pub extended_key_usages: Vec<ExtendedKeyUsagePurpose>,
+	pub name_constraints: Option<NameConstraints>,
+	pub custom_extensions: Vec<CustomExtension>,
 	/// The certificate's key pair, a new random key pair will be generated if this is `None`
-	pub key_pair :Option<KeyPair>,
+	pub key_pair: Option<KeyPair>,
 	/// If `true` (and not self-signed), the 'Authority Key Identifier' extension will be added to the generated cert
-	pub use_authority_key_identifier_extension :bool,
+	pub use_authority_key_identifier_extension: bool,
 	/// Method to generate key identifiers from public keys
 	///
 	/// Defaults to SHA-256.
-	pub key_identifier_method :KeyIdMethod,
+	pub key_identifier_method: KeyIdMethod,
 }
 
 impl Default for CertificateParams {
@@ -678,7 +678,7 @@ impl CertificateParams {
 	///
 	/// *This constructor is only available if rcgen is built with the "pem" and "x509-parser" features*
 	#[cfg(all(feature = "pem", feature = "x509-parser"))]
-	pub fn from_ca_cert_pem(pem_str :&str, key_pair :KeyPair) -> Result<Self, RcgenError> {
+	pub fn from_ca_cert_pem(pem_str: &str, key_pair: KeyPair) -> Result<Self, RcgenError> {
 		let certificate = pem::parse(pem_str)
 			.or(Err(RcgenError::CouldNotParseCertificate))?;
 		Self::from_ca_cert_der(&certificate.contents, key_pair)
@@ -700,7 +700,7 @@ impl CertificateParams {
 	///
 	/// *This constructor is only available if rcgen is built with the "x509-parser" feature*
 	#[cfg(feature = "x509-parser")]
-	pub fn from_ca_cert_der(ca_cert :&[u8], key_pair :KeyPair) -> Result<Self, RcgenError> {
+	pub fn from_ca_cert_der(ca_cert :&[u8], key_pair: KeyPair) -> Result<Self, RcgenError> {
 		let (_remainder, x509) = x509_parser::parse_x509_certificate(ca_cert)
 			.or(Err(RcgenError::CouldNotParseCertificate))?;
 
@@ -718,7 +718,7 @@ impl CertificateParams {
 			}
 		)
 	}
-	fn write_subject_alt_names(&self, writer :DERWriter) {
+	fn write_subject_alt_names(&self, writer: DERWriter) {
 		Self::write_extension(writer, OID_SUBJECT_ALT_NAME, false, |writer| {
 			writer.write_sequence(|writer| {
 				for san in self.subject_alt_names.iter() {
@@ -735,7 +735,7 @@ impl CertificateParams {
 			});
 		});
 	}
-	fn write_request<K: PublicKeyData>(&self, pub_key: &K, writer :DERWriter) {
+	fn write_request<K: PublicKeyData>(&self, pub_key: &K, writer: DERWriter) {
 		writer.write_sequence(|writer| {
 			// Write version
 			writer.next().write_u8(0);
@@ -783,7 +783,7 @@ impl CertificateParams {
 
 		});
 	}
-	fn write_cert<K: PublicKeyData>(&self, writer :DERWriter, pub_key: &K, ca :&Certificate) -> Result<(), RcgenError> {
+	fn write_cert<K: PublicKeyData>(&self, writer: DERWriter, pub_key: &K, ca: &Certificate) -> Result<(), RcgenError> {
 		writer.write_sequence(|writer| {
 			// Write version
 			writer.next().write_tagged(Tag::context(0), |writer| {
@@ -853,7 +853,7 @@ impl CertificateParams {
 								writer.next().write_oid(&oid);
 								writer.next().write_bool(true);
 
-								let mut bits :u16 = 0;
+								let mut bits: u16 = 0;
 
 								for entry in self.key_usages.iter() {
 									// Map the index to a value
@@ -975,7 +975,7 @@ impl CertificateParams {
 		})
 	}
 	/// Serializes an X.509v3 extension according to RFC 5280
-	fn write_extension(writer :DERWriter, extension_oid :&[u64], is_critical :bool, value_serializer :impl FnOnce(DERWriter)) {
+	fn write_extension(writer: DERWriter, extension_oid :&[u64], is_critical: bool, value_serializer: impl FnOnce(DERWriter)) {
 		// Extension specification:
 		//    Extension  ::=  SEQUENCE  {
 		//         extnID      OBJECT IDENTIFIER,
@@ -1009,7 +1009,7 @@ impl CertificateParams {
 		let truncated_digest = &digest.as_ref()[0..20];
 		truncated_digest.to_vec()
 	}
-	fn serialize_der_with_signer<K: PublicKeyData>(&self, pub_key: &K, ca :&Certificate) -> Result<Vec<u8>, RcgenError> {
+	fn serialize_der_with_signer<K: PublicKeyData>(&self, pub_key: &K, ca: &Certificate) -> Result<Vec<u8>, RcgenError> {
 		yasna::try_construct_der(|writer| {
 			writer.write_sequence(|writer| {
 
@@ -1057,7 +1057,7 @@ pub enum BasicConstraints {
 
 impl CertificateParams {
 	/// Generate certificate parameters with reasonable defaults
-	pub fn new(subject_alt_names :impl Into<Vec<String>>) -> Self {
+	pub fn new(subject_alt_names: impl Into<Vec<String>>) -> Self {
 		let subject_alt_names = subject_alt_names.into()
 			.into_iter()
 			.map(|s| SanType::DnsName(s))
@@ -1075,12 +1075,12 @@ impl CertificateParams {
 pub struct NameConstraints {
 	/// If non-empty, a whitelist of subtrees that the
 	/// domain has to match.
-	pub permitted_subtrees :Vec<GeneralSubtree>,
+	pub permitted_subtrees: Vec<GeneralSubtree>,
 	/// A list of excluded subtrees.
 	///
 	/// Any name matching an excluded subtree is invalid
 	/// even if it also matches a permitted subtree.
-	pub excluded_subtrees :Vec<GeneralSubtree>,
+	pub excluded_subtrees: Vec<GeneralSubtree>,
 }
 
 impl NameConstraints {
@@ -1152,11 +1152,11 @@ impl ExtendedKeyUsagePurpose {
 /// [RFC 5280](https://tools.ietf.org/html/rfc5280#section-4.2)
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub struct CustomExtension {
-	oid :Vec<u64>,
-	critical :bool,
+	oid: Vec<u64>,
+	critical: bool,
 
 	/// The content must be DER-encoded
-	content :Vec<u8>,
+	content: Vec<u8>,
 }
 
 impl CustomExtension {
@@ -1176,7 +1176,7 @@ impl CustomExtension {
 		}
 	}
 	/// Create a new custom extension with the specified content
-	pub fn from_oid_content(oid :&[u64], content :Vec<u8>) -> Self {
+	pub fn from_oid_content(oid :&[u64], content: Vec<u8>) -> Self {
 		Self {
 			oid : oid.to_owned(),
 			critical : false,
@@ -1184,7 +1184,7 @@ impl CustomExtension {
 		}
 	}
 	/// Sets the criticality flag of the extension.
-	pub fn set_criticality(&mut self, criticality :bool) {
+	pub fn set_criticality(&mut self, criticality: bool) {
 		self.critical = criticality;
 	}
 	/// Obtains the criticality flag of the extension.
@@ -1224,7 +1224,7 @@ pub enum KeyIdMethod {
 /// have to import the time crate yourself in order to specify date
 /// information, second so that users don't have to type unproportionately
 /// long code just to generate an instance of [`OffsetDateTime`].
-pub fn date_time_ymd(year :i32, month :u8, day :u8) -> OffsetDateTime {
+pub fn date_time_ymd(year: i32, month: u8, day: u8) -> OffsetDateTime {
 	let month = Month::try_from(month).expect("out-of-range month");
 	let primitive_dt = PrimitiveDateTime::new(
 		Date::from_calendar_date(year, month, day).expect("invalid or out-of-range date"),
@@ -1233,7 +1233,7 @@ pub fn date_time_ymd(year :i32, month :u8, day :u8) -> OffsetDateTime {
 	primitive_dt.assume_utc()
 }
 
-fn dt_strip_nanos(dt :OffsetDateTime) -> OffsetDateTime {
+fn dt_strip_nanos(dt: OffsetDateTime) -> OffsetDateTime {
 	// Set nanoseconds to zero
 	// This is needed because the GeneralizedTime serializer would otherwise
 	// output fractional values which RFC 5280 explicitly forbode [1].
@@ -1246,12 +1246,12 @@ fn dt_strip_nanos(dt :OffsetDateTime) -> OffsetDateTime {
 	dt.replace_time(time)
 }
 
-fn dt_to_generalized(dt :OffsetDateTime) -> GeneralizedTime {
+fn dt_to_generalized(dt: OffsetDateTime) -> GeneralizedTime {
 	let date_time = dt_strip_nanos(dt);
 	GeneralizedTime::from_datetime(date_time)
 }
 
-fn write_dt_utc_or_generalized(writer :DERWriter, dt :OffsetDateTime) {
+fn write_dt_utc_or_generalized(writer: DERWriter, dt: OffsetDateTime) {
 	// RFC 5280 requires CAs to write certificate validity dates
 	// below 2050 as UTCTime, and anything starting from 2050
 	// as GeneralizedTime [1]. The RFC doesn't say anything
@@ -1268,7 +1268,7 @@ fn write_dt_utc_or_generalized(writer :DERWriter, dt :OffsetDateTime) {
 	}
 }
 
-fn write_distinguished_name(writer :DERWriter, dn :&DistinguishedName) {
+fn write_distinguished_name(writer: DERWriter, dn: &DistinguishedName) {
 		writer.write_sequence(|writer| {
 			for (ty, content) in dn.iter() {
 				writer.next().write_set(|writer| {
@@ -1293,7 +1293,7 @@ fn write_distinguished_name(writer :DERWriter, dn :&DistinguishedName) {
 		});
 }
 
-fn write_general_subtrees(writer :DERWriter, tag :u64, general_subtrees :&[GeneralSubtree]) {
+fn write_general_subtrees(writer: DERWriter, tag: u64, general_subtrees :&[GeneralSubtree]) {
 	writer.write_tagged_implicit(Tag::context(tag), |writer| {
 		writer.write_sequence(|writer| {
 			for subtree in general_subtrees.iter() {
@@ -1315,7 +1315,7 @@ fn write_general_subtrees(writer :DERWriter, tag :u64, general_subtrees :&[Gener
 
 impl Certificate {
 	/// Generates a new certificate from the given parameters
-	pub fn from_params(mut params :CertificateParams) -> Result<Self, RcgenError> {
+	pub fn from_params(mut params: CertificateParams) -> Result<Self, RcgenError> {
 		let key_pair = if let Some(key_pair) = params.key_pair.take() {
 			if !key_pair.is_compatible(&params.alg) {
 				return Err(RcgenError::CertificateKeyPairMismatch);
@@ -1340,7 +1340,7 @@ impl Certificate {
 		self.serialize_der_with_signer(&self)
 	}
 	/// Serializes the certificate, signed with another certificate's key, in binary DER format
-	pub fn serialize_der_with_signer(&self, ca :&Certificate) -> Result<Vec<u8>, RcgenError> {
+	pub fn serialize_der_with_signer(&self, ca: &Certificate) -> Result<Vec<u8>, RcgenError> {
 		self.params.serialize_der_with_signer(&self.key_pair, ca)
 	}
 	/// Serializes a certificate signing request in binary DER format
@@ -1381,7 +1381,7 @@ impl Certificate {
 	///
 	/// *This function is only available if rcgen is built with the "pem" feature*
 	#[cfg(feature = "pem")]
-	pub fn serialize_pem_with_signer(&self, ca :&Certificate) -> Result<String, RcgenError> {
+	pub fn serialize_pem_with_signer(&self, ca: &Certificate) -> Result<String, RcgenError> {
 		let p = Pem {
 			tag : "CERTIFICATE".to_string(),
 			contents : self.serialize_der_with_signer(ca)?,
@@ -1436,7 +1436,7 @@ enum KeyPairKind {
 }
 
 impl fmt::Debug for KeyPairKind {
-	fn fmt(&self, f :&mut fmt::Formatter) -> fmt::Result {
+	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
 		match self {
 			Self::Ec(key_pair) => write!(f, "{:?}", key_pair),
 			Self::Ed(key_pair) => write!(f, "{:?}", key_pair),
@@ -1455,9 +1455,9 @@ impl fmt::Debug for KeyPairKind {
 /// and conversion between the formats.
 #[derive(Debug)]
 pub struct KeyPair {
-	kind :KeyPairKind,
+	kind: KeyPairKind,
 	alg :&'static SignatureAlgorithm,
-	serialized_der :Vec<u8>,
+	serialized_der: Vec<u8>,
 }
 
 impl KeyPair {
@@ -1471,14 +1471,14 @@ impl KeyPair {
 	///
 	/// *This constructor is only available if rcgen is built with the "pem" feature*
 	#[cfg(feature = "pem")]
-	pub fn from_pem(pem_str :&str) -> Result<Self, RcgenError> {
+	pub fn from_pem(pem_str: &str) -> Result<Self, RcgenError> {
 		let private_key = pem::parse(pem_str)?;
 		let private_key_der :&[_] = &private_key.contents;
 		Ok(private_key_der.try_into()?)
 	}
 
 	/// Obtains the key pair from a raw public key and a remote private key
-	pub fn from_remote(key_pair :Box<dyn RemoteKeyPair + Send + Sync>) -> Result<Self, RcgenError> {
+	pub fn from_remote(key_pair: Box<dyn RemoteKeyPair + Send + Sync>) -> Result<Self, RcgenError> {
 		Ok(Self {
 			alg : key_pair.algorithm(),
 			kind : KeyPairKind::Remote(key_pair),
@@ -1494,7 +1494,7 @@ impl KeyPair {
 	///
 	/// *This constructor is only available if rcgen is built with the "pem" feature*
 	#[cfg(feature = "pem")]
-	pub fn from_pem_and_sign_algo(pem_str :&str, alg :&'static SignatureAlgorithm) -> Result<Self, RcgenError> {
+	pub fn from_pem_and_sign_algo(pem_str: &str, alg :&'static SignatureAlgorithm) -> Result<Self, RcgenError> {
 		let private_key = pem::parse(pem_str)?;
 		let private_key_der :&[_] = &private_key.contents;
 		Ok(Self::from_der_and_sign_algo(private_key_der, alg)?)
@@ -1612,7 +1612,7 @@ pub enum RcgenError {
 }
 
 impl fmt::Display for RcgenError {
-	fn fmt(&self, f :&mut fmt::Formatter) -> fmt::Result {
+	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
 		use self::RcgenError::*;
 		match self {
 			CouldNotParseCertificate => write!(f, "Could not parse certificate")?,
@@ -1644,20 +1644,20 @@ impl fmt::Display for RcgenError {
 impl Error for RcgenError {}
 
 impl From<ring::error::Unspecified> for RcgenError {
-	fn from(_unspecified :ring::error::Unspecified) -> Self {
+	fn from(_unspecified: ring::error::Unspecified) -> Self {
 		RcgenError::RingUnspecified
 	}
 }
 
 impl From<ring::error::KeyRejected> for RcgenError {
-	fn from(err :ring::error::KeyRejected) -> Self {
+	fn from(err: ring::error::KeyRejected) -> Self {
 		RcgenError::RingKeyRejected(err.description_())
 	}
 }
 
 #[cfg(feature = "pem")]
 impl From<pem::PemError> for RcgenError {
-	fn from(e :pem::PemError) -> Self {
+	fn from(e: pem::PemError) -> Self {
 		RcgenError::PemError(e)
 	}
 }
@@ -1730,7 +1730,7 @@ impl KeyPair {
 		self.raw_bytes()
 	}
 	/// Check if this key pair can be used with the given signature algorithm
-	pub fn is_compatible(&self, signature_algorithm :&SignatureAlgorithm) -> bool {
+	pub fn is_compatible(&self, signature_algorithm: &SignatureAlgorithm) -> bool {
 		self.alg == signature_algorithm
 	}
 	/// Returns (possibly multiple) compatible [`SignatureAlgorithm`]'s
@@ -1739,7 +1739,7 @@ impl KeyPair {
 			-> impl Iterator<Item=&'static SignatureAlgorithm> {
 		std::iter::once(self.alg)
 	}
-	fn sign(&self, msg :&[u8], writer :DERWriter) -> Result<(), RcgenError> {
+	fn sign(&self, msg :&[u8], writer: DERWriter) -> Result<(), RcgenError> {
 		match &self.kind {
 			KeyPairKind::Ec(kp) => {
 				let system_random = SystemRandom::new();
@@ -1841,7 +1841,7 @@ impl PublicKeyData for KeyPair {
 trait PublicKeyData {
 	fn alg(&self) -> &SignatureAlgorithm;
 	fn raw_bytes(&self) -> &[u8];
-	fn serialize_public_key_der(&self, writer :DERWriter) {
+	fn serialize_public_key_der(&self, writer: DERWriter) {
 		writer.write_sequence(|writer| {
 			self.alg().write_oids_sign_alg(writer.next());
 			let pk = self.raw_bytes();
@@ -1859,20 +1859,20 @@ enum SignatureAlgorithmParams {
 	/// RSASSA-PSS-params as per RFC 4055
 	RsaPss {
 		hash_algorithm :&'static [u64],
-		salt_length :u64,
+		salt_length: u64,
 	},
 }
 
 /// Signature algorithm type
 pub struct SignatureAlgorithm {
 	oids_sign_alg :&'static [&'static [u64]],
-	sign_alg :SignAlgo,
+	sign_alg: SignAlgo,
 	oid_components :&'static [u64],
-	params :SignatureAlgorithmParams,
+	params: SignatureAlgorithmParams,
 }
 
 impl fmt::Debug for SignatureAlgorithm {
-	fn fmt(&self, f :&mut fmt::Formatter) -> fmt::Result {
+	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
 		if self == &PKCS_RSA_SHA256 {
 			write!(f, "PKCS_RSA_SHA256")
 		} else if self == &PKCS_RSA_SHA384 {
@@ -1894,7 +1894,7 @@ impl fmt::Debug for SignatureAlgorithm {
 }
 
 impl PartialEq for SignatureAlgorithm {
-	fn eq(&self, other :&Self) -> bool {
+	fn eq(&self, other: &Self) -> bool {
 		(self.oids_sign_alg, self.oid_components) == (other.oids_sign_alg, other.oid_components)
 	}
 }
@@ -1936,27 +1936,27 @@ impl SignatureAlgorithm {
 
 
 /// RSA signing with PKCS#1 1.5 padding and SHA-256 hashing as per [RFC 4055](https://tools.ietf.org/html/rfc4055)
-pub static PKCS_RSA_SHA256 :SignatureAlgorithm = SignatureAlgorithm {
+pub static PKCS_RSA_SHA256: SignatureAlgorithm = SignatureAlgorithm {
 	oids_sign_alg :&[&OID_RSA_ENCRYPTION],
-	sign_alg :SignAlgo::Rsa(),
+	sign_alg: SignAlgo::Rsa(),
 	// sha256WithRSAEncryption in RFC 4055
 	oid_components : &[1, 2, 840, 113549, 1, 1, 11],
 	params : SignatureAlgorithmParams::Null,
 };
 
 /// RSA signing with PKCS#1 1.5 padding and SHA-256 hashing as per [RFC 4055](https://tools.ietf.org/html/rfc4055)
-pub static PKCS_RSA_SHA384 :SignatureAlgorithm = SignatureAlgorithm {
+pub static PKCS_RSA_SHA384: SignatureAlgorithm = SignatureAlgorithm {
 	oids_sign_alg :&[&OID_RSA_ENCRYPTION],
-	sign_alg :SignAlgo::Rsa(),
+	sign_alg: SignAlgo::Rsa(),
 	// sha384WithRSAEncryption in RFC 4055
 	oid_components : &[1, 2, 840, 113549, 1, 1, 12],
 	params : SignatureAlgorithmParams::Null,
 };
 
 /// RSA signing with PKCS#1 1.5 padding and SHA-512 hashing as per [RFC 4055](https://tools.ietf.org/html/rfc4055)
-pub static PKCS_RSA_SHA512 :SignatureAlgorithm = SignatureAlgorithm {
+pub static PKCS_RSA_SHA512: SignatureAlgorithm = SignatureAlgorithm {
 	oids_sign_alg :&[&OID_RSA_ENCRYPTION],
-	sign_alg :SignAlgo::Rsa(),
+	sign_alg: SignAlgo::Rsa(),
 	// sha512WithRSAEncryption in RFC 4055
 	oid_components : &[1, 2, 840, 113549, 1, 1, 13],
 	params : SignatureAlgorithmParams::Null,
@@ -1968,11 +1968,11 @@ pub static PKCS_RSA_SHA512 :SignatureAlgorithm = SignatureAlgorithm {
 // support those: https://github.com/briansmith/ring/issues/1353
 //
 /// RSA signing with PKCS#1 2.1 RSASSA-PSS padding and SHA-256 hashing as per [RFC 4055](https://tools.ietf.org/html/rfc4055)
-static PKCS_RSA_PSS_SHA256 :SignatureAlgorithm = SignatureAlgorithm {
+static PKCS_RSA_PSS_SHA256: SignatureAlgorithm = SignatureAlgorithm {
 	// We could also use OID_RSA_ENCRYPTION here, but it's recommended
 	// to use ID-RSASSA-PSS if possible.
 	oids_sign_alg :&[&OID_RSASSA_PSS],
-	sign_alg :SignAlgo::Rsa(),
+	sign_alg: SignAlgo::Rsa(),
 	oid_components : &OID_RSASSA_PSS,//&[1, 2, 840, 113549, 1, 1, 13],
 	// rSASSA-PSS-SHA256-Params in RFC 4055
 	params : SignatureAlgorithmParams::RsaPss {
@@ -1983,18 +1983,18 @@ static PKCS_RSA_PSS_SHA256 :SignatureAlgorithm = SignatureAlgorithm {
 };
 
 /// ECDSA signing using the P-256 curves and SHA-256 hashing as per [RFC 5758](https://tools.ietf.org/html/rfc5758#section-3.2)
-pub static PKCS_ECDSA_P256_SHA256 :SignatureAlgorithm = SignatureAlgorithm {
+pub static PKCS_ECDSA_P256_SHA256: SignatureAlgorithm = SignatureAlgorithm {
 	oids_sign_alg :&[&OID_EC_PUBLIC_KEY, &OID_EC_SECP_256_R1],
-	sign_alg :SignAlgo::EcDsa(&signature::ECDSA_P256_SHA256_ASN1_SIGNING),
+	sign_alg: SignAlgo::EcDsa(&signature::ECDSA_P256_SHA256_ASN1_SIGNING),
 	/// ecdsa-with-SHA256 in RFC 5758
 	oid_components : &[1, 2, 840, 10045, 4, 3, 2],
 	params : SignatureAlgorithmParams::None,
 };
 
 /// ECDSA signing using the P-384 curves and SHA-384 hashing as per [RFC 5758](https://tools.ietf.org/html/rfc5758#section-3.2)
-pub static PKCS_ECDSA_P384_SHA384 :SignatureAlgorithm = SignatureAlgorithm {
+pub static PKCS_ECDSA_P384_SHA384: SignatureAlgorithm = SignatureAlgorithm {
 	oids_sign_alg :&[&OID_EC_PUBLIC_KEY, &OID_EC_SECP_384_R1],
-	sign_alg :SignAlgo::EcDsa(&signature::ECDSA_P384_SHA384_ASN1_SIGNING),
+	sign_alg: SignAlgo::EcDsa(&signature::ECDSA_P384_SHA384_ASN1_SIGNING),
 	/// ecdsa-with-SHA384 in RFC 5758
 	oid_components : &[1, 2, 840, 10045, 4, 3, 3],
 	params : SignatureAlgorithmParams::None,
@@ -2003,10 +2003,10 @@ pub static PKCS_ECDSA_P384_SHA384 :SignatureAlgorithm = SignatureAlgorithm {
 // TODO PKCS_ECDSA_P521_SHA512 https://github.com/briansmith/ring/issues/824
 
 /// ED25519 curve signing as per [RFC 8410](https://tools.ietf.org/html/rfc8410)
-pub static PKCS_ED25519 :SignatureAlgorithm = SignatureAlgorithm {
+pub static PKCS_ED25519: SignatureAlgorithm = SignatureAlgorithm {
 	/// id-Ed25519 in RFC 8410
 	oids_sign_alg :&[&[1, 3, 101, 112]],
-	sign_alg :SignAlgo::EdDsa(&signature::ED25519),
+	sign_alg: SignAlgo::EdDsa(&signature::ED25519),
 	/// id-Ed25519 in RFC 8410
 	oid_components : &[1, 3, 101, 112],
 	params : SignatureAlgorithmParams::None,
@@ -2017,7 +2017,7 @@ impl SignatureAlgorithm {
 	fn alg_ident_oid(&self) -> ObjectIdentifier {
 		ObjectIdentifier::from_slice(self.oid_components)
 	}
-	fn write_params(&self, writer :&mut yasna::DERWriterSeq) {
+	fn write_params(&self, writer: &mut yasna::DERWriterSeq) {
 		match self.params {
 			SignatureAlgorithmParams::None => (),
 			SignatureAlgorithmParams::Null => {
@@ -2060,14 +2060,14 @@ impl SignatureAlgorithm {
 		}
 	}
 	/// Writes the algorithm identifier as it appears inside a signature
-	fn write_alg_ident(&self, writer :DERWriter) {
+	fn write_alg_ident(&self, writer: DERWriter) {
 		writer.write_sequence(|writer| {
 			writer.next().write_oid(&self.alg_ident_oid());
 			self.write_params(writer);
 		});
 	}
 	/// Writes the algorithm identifier as it appears inside subjectPublicKeyInfo
-	fn write_oids_sign_alg(&self, writer :DERWriter) {
+	fn write_oids_sign_alg(&self, writer: DERWriter) {
 		writer.write_sequence(|writer| {
 			for oid in self.oids_sign_alg {
 				let oid = ObjectIdentifier::from_slice(oid);
