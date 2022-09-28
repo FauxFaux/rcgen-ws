@@ -60,10 +60,13 @@ YPTHy8SWRA2sMII3ArhHJ8A=
 "#;
 
 pub fn default_params() -> CertificateParams {
-	let mut params = CertificateParams::new(vec![
-		"crabs.crabs".to_string(), "localhost".to_string(),
-	]);
-	params.distinguished_name.push(DnType::OrganizationName, "Crab widgits SE");
-	params.distinguished_name.push(DnType::CommonName, "Master CA");
+	let mut params =
+		CertificateParams::new(vec!["crabs.crabs".to_string(), "localhost".to_string()]);
+	params
+		.distinguished_name
+		.push(DnType::OrganizationName, "Crab widgits SE");
+	params
+		.distinguished_name
+		.push(DnType::CommonName, "Master CA");
 	params
 }
