@@ -1,9 +1,10 @@
 #![allow(clippy::complexity, clippy::style, clippy::pedantic)]
 
+use std::fs;
+
 use rcgen::{Certificate, CertificateParams,
 	DistinguishedName, DnType, SanType,
 	date_time_ymd};
-use std::fs;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
 	let mut params: CertificateParams = Default::default();

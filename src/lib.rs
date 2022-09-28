@@ -30,11 +30,19 @@ println!("{}", cert.serialize_private_key_pem());
 #![deny(missing_docs)]
 #![allow(clippy::complexity, clippy::style, clippy::pedantic)]
 
+use std::collections::HashMap;
+use std::convert::TryFrom;
+use std::convert::TryInto;
+use std::error::Error;
+use std::fmt;
+use std::hash::{Hash, Hasher};
+use std::net::IpAddr;
+use std::str::FromStr;
+
 use yasna::Tag;
 use yasna::models::ObjectIdentifier;
 #[cfg(feature = "pem")]
 use pem::Pem;
-use std::convert::TryInto;
 use ring::digest;
 use ring::signature::{EcdsaKeyPair, Ed25519KeyPair, RsaKeyPair, RsaEncoding};
 use ring::rand::SystemRandom;
@@ -44,13 +52,6 @@ use yasna::DERWriter;
 use yasna::models::{GeneralizedTime, UTCTime};
 use yasna::tags::{TAG_BMPSTRING, TAG_TELETEXSTRING, TAG_UNIVERSALSTRING};
 use time::{Date, Month, OffsetDateTime, PrimitiveDateTime, Time};
-use std::collections::HashMap;
-use std::fmt;
-use std::convert::TryFrom;
-use std::error::Error;
-use std::net::IpAddr;
-use std::str::FromStr;
-use std::hash::{Hash, Hasher};
 
 /// A self signed certificate together with signing keys
 pub struct Certificate {
