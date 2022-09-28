@@ -74,7 +74,7 @@ as output.
 extern crate rcgen;
 use rcgen::generate_simple_self_signed;
 # fn main () {
-let subject_alt_names :&[_] = &["hello.world.example".to_string(),
+let subject_alt_names: &[_] = &["hello.world.example".to_string(),
 	"localhost".to_string()];
 
 let cert = generate_simple_self_signed(subject_alt_names).unwrap();
@@ -94,59 +94,59 @@ pub fn generate_simple_self_signed(subject_alt_names: impl Into<Vec<String>>) ->
 // Uses ECDSA: https://crt.sh/?asn1=607203242
 
 /// pkcs-9-at-extensionRequest in RFC 2985
-const OID_PKCS_9_AT_EXTENSION_REQUEST :&[u64] = &[1, 2, 840, 113549, 1, 9, 14];
+const OID_PKCS_9_AT_EXTENSION_REQUEST: &[u64] = &[1, 2, 840, 113549, 1, 9, 14];
 
 /// id-at-countryName in RFC 5280
-const OID_COUNTRY_NAME :&[u64] = &[2, 5, 4, 6];
+const OID_COUNTRY_NAME: &[u64] = &[2, 5, 4, 6];
 /// id-at-localityName in RFC 5280
-const OID_LOCALITY_NAME :&[u64] = &[2, 5, 4, 7];
+const OID_LOCALITY_NAME: &[u64] = &[2, 5, 4, 7];
 /// id-at-stateOrProvinceName in RFC 5280
-const OID_STATE_OR_PROVINCE_NAME :&[u64] = &[2, 5, 4, 8];
+const OID_STATE_OR_PROVINCE_NAME: &[u64] = &[2, 5, 4, 8];
 /// id-at-organizationName in RFC 5280
-const OID_ORG_NAME :&[u64] = &[2, 5, 4, 10];
+const OID_ORG_NAME: &[u64] = &[2, 5, 4, 10];
 /// id-at-organizationalUnitName in RFC 5280
-const OID_ORG_UNIT_NAME :&[u64] = &[2, 5, 4, 11];
+const OID_ORG_UNIT_NAME: &[u64] = &[2, 5, 4, 11];
 /// id-at-commonName in RFC 5280
-const OID_COMMON_NAME :&[u64] = &[2, 5, 4, 3];
+const OID_COMMON_NAME: &[u64] = &[2, 5, 4, 3];
 
 // https://tools.ietf.org/html/rfc5480#section-2.1.1
-const OID_EC_PUBLIC_KEY :&[u64] = &[1, 2, 840, 10045, 2, 1];
-const OID_EC_SECP_256_R1 :&[u64] = &[1, 2, 840, 10045, 3, 1, 7];
-const OID_EC_SECP_384_R1 :&[u64] = &[1, 3, 132, 0, 34];
+const OID_EC_PUBLIC_KEY: &[u64] = &[1, 2, 840, 10045, 2, 1];
+const OID_EC_SECP_256_R1: &[u64] = &[1, 2, 840, 10045, 3, 1, 7];
+const OID_EC_SECP_384_R1: &[u64] = &[1, 3, 132, 0, 34];
 
 // rsaEncryption in RFC 4055
-const OID_RSA_ENCRYPTION :&[u64] = &[1, 2, 840, 113549, 1, 1, 1];
+const OID_RSA_ENCRYPTION: &[u64] = &[1, 2, 840, 113549, 1, 1, 1];
 
 // id-RSASSA-PSS in RFC 4055
-const OID_RSASSA_PSS :&[u64] = &[1, 2, 840, 113549, 1, 1, 10];
+const OID_RSASSA_PSS: &[u64] = &[1, 2, 840, 113549, 1, 1, 10];
 
 // https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.3
-const OID_KEY_USAGE :&[u64] = &[2, 5, 29, 15];
+const OID_KEY_USAGE: &[u64] = &[2, 5, 29, 15];
 
 // https://tools.ietf.org/html/rfc5280#appendix-A.2
 // https://tools.ietf.org/html/rfc5280#section-4.2.1.6
-const OID_SUBJECT_ALT_NAME :&[u64] = &[2, 5, 29, 17];
+const OID_SUBJECT_ALT_NAME: &[u64] = &[2, 5, 29, 17];
 
 // https://tools.ietf.org/html/rfc5280#section-4.2.1.9
-const OID_BASIC_CONSTRAINTS :&[u64] = &[2, 5, 29, 19];
+const OID_BASIC_CONSTRAINTS: &[u64] = &[2, 5, 29, 19];
 
 // https://tools.ietf.org/html/rfc5280#section-4.2.1.2
-const OID_SUBJECT_KEY_IDENTIFIER :&[u64] = &[2, 5, 29, 14];
+const OID_SUBJECT_KEY_IDENTIFIER: &[u64] = &[2, 5, 29, 14];
 
 // https://tools.ietf.org/html/rfc5280#section-4.2.1.1
-const OID_AUTHORITY_KEY_IDENTIFIER :&[u64] = &[2, 5, 29, 35];
+const OID_AUTHORITY_KEY_IDENTIFIER: &[u64] = &[2, 5, 29, 35];
 
 // id-ce-extKeyUsage in
 // https://tools.ietf.org/html/rfc5280#section-4.2.1.12
-const OID_EXT_KEY_USAGE :&[u64] = &[2, 5, 29, 37];
+const OID_EXT_KEY_USAGE: &[u64] = &[2, 5, 29, 37];
 
 // id-ce-nameConstraints in
 /// https://tools.ietf.org/html/rfc5280#section-4.2.1.10
-const OID_NAME_CONSTRAINTS :&[u64] = &[2, 5, 29, 30];
+const OID_NAME_CONSTRAINTS: &[u64] = &[2, 5, 29, 30];
 
 // id-pe-acmeIdentifier in
 // https://www.iana.org/assignments/smi-numbers/smi-numbers.xhtml#smi-numbers-1.3.6.1.5.5.7.1
-const OID_PE_ACME :&[u64] = &[1, 3, 6, 1, 5, 5, 7, 1, 31];
+const OID_PE_ACME: &[u64] = &[1, 3, 6, 1, 5, 5, 7, 1, 31];
 
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
 #[allow(missing_docs)]
@@ -356,7 +356,7 @@ impl DnType {
 	}
 
 	/// Generate a DnType for the provided OID
-	pub fn from_oid(slice :&[u64]) -> Self {
+	pub fn from_oid(slice: &[u64]) -> Self {
 		match slice {
 			OID_COUNTRY_NAME => DnType::CountryName,
 			OID_LOCALITY_NAME => DnType::LocalityName,
@@ -564,7 +564,7 @@ impl CertificateSigningRequest {
 	/// Currently, this only supports the `Subject Alternative Name` extension.
 	/// On encountering other extensions, this function will return an error.
 	#[cfg(feature = "x509-parser")]
-	pub fn from_der(csr :&[u8]) -> Result<Self, RcgenError> {
+	pub fn from_der(csr: &[u8]) -> Result<Self, RcgenError> {
 		use x509_parser::prelude::FromDer;
 		let csr = x509_parser::certification_request::X509CertificationRequest::from_der(csr)
 			.map_err(|_| RcgenError::CouldNotParseCertificationRequest)?.1;
@@ -701,7 +701,7 @@ impl CertificateParams {
 	///
 	/// *This constructor is only available if rcgen is built with the "x509-parser" feature*
 	#[cfg(feature = "x509-parser")]
-	pub fn from_ca_cert_der(ca_cert :&[u8], key_pair: KeyPair) -> Result<Self, RcgenError> {
+	pub fn from_ca_cert_der(ca_cert: &[u8], key_pair: KeyPair) -> Result<Self, RcgenError> {
 		let (_remainder, x509) = x509_parser::parse_x509_certificate(ca_cert)
 			.or(Err(RcgenError::CouldNotParseCertificate))?;
 
@@ -976,7 +976,7 @@ impl CertificateParams {
 		})
 	}
 	/// Serializes an X.509v3 extension according to RFC 5280
-	fn write_extension(writer: DERWriter, extension_oid :&[u64], is_critical: bool, value_serializer: impl FnOnce(DERWriter)) {
+	fn write_extension(writer: DERWriter, extension_oid: &[u64], is_critical: bool, value_serializer: impl FnOnce(DERWriter)) {
 		// Extension specification:
 		//    Extension  ::=  SEQUENCE  {
 		//         extnID      OBJECT IDENTIFIER,
@@ -1165,7 +1165,7 @@ impl CustomExtension {
 	/// as specified in [RFC 8737](https://tools.ietf.org/html/rfc8737#section-3)
 	///
 	/// Panics if the passed `sha_digest` parameter doesn't hold 32 bytes (256 bits).
-	pub fn new_acme_identifier(sha_digest :&[u8]) -> Self {
+	pub fn new_acme_identifier(sha_digest: &[u8]) -> Self {
 		assert_eq!(sha_digest.len(), 32, "wrong size of sha_digest");
 		let content = yasna::construct_der(|writer| {
 			writer.write_bytes(sha_digest);
@@ -1177,7 +1177,7 @@ impl CustomExtension {
 		}
 	}
 	/// Create a new custom extension with the specified content
-	pub fn from_oid_content(oid :&[u64], content: Vec<u8>) -> Self {
+	pub fn from_oid_content(oid: &[u64], content: Vec<u8>) -> Self {
 		Self {
 			oid : oid.to_owned(),
 			critical : false,
@@ -1294,7 +1294,7 @@ fn write_distinguished_name(writer: DERWriter, dn: &DistinguishedName) {
 		});
 }
 
-fn write_general_subtrees(writer: DERWriter, tag: u64, general_subtrees :&[GeneralSubtree]) {
+fn write_general_subtrees(writer: DERWriter, tag: u64, general_subtrees: &[GeneralSubtree]) {
 	writer.write_tagged_implicit(Tag::context(tag), |writer| {
 		writer.write_sequence(|writer| {
 			for subtree in general_subtrees.iter() {
@@ -1465,7 +1465,7 @@ impl KeyPair {
 	/// Parses the key pair from the DER format
 	///
 	/// Equivalent to using the [`TryFrom`] implementation.
-	pub fn from_der(der :&[u8]) -> Result<Self, RcgenError> {
+	pub fn from_der(der: &[u8]) -> Result<Self, RcgenError> {
 		Ok(der.try_into()?)
 	}
 	/// Parses the key pair from the ASCII PEM format
@@ -1474,7 +1474,7 @@ impl KeyPair {
 	#[cfg(feature = "pem")]
 	pub fn from_pem(pem_str: &str) -> Result<Self, RcgenError> {
 		let private_key = pem::parse(pem_str)?;
-		let private_key_der :&[_] = &private_key.contents;
+		let private_key_der: &[_] = &private_key.contents;
 		Ok(private_key_der.try_into()?)
 	}
 
@@ -1497,7 +1497,7 @@ impl KeyPair {
 	#[cfg(feature = "pem")]
 	pub fn from_pem_and_sign_algo(pem_str: &str, alg :&'static SignatureAlgorithm) -> Result<Self, RcgenError> {
 		let private_key = pem::parse(pem_str)?;
-		let private_key_der :&[_] = &private_key.contents;
+		let private_key_der: &[_] = &private_key.contents;
 		Ok(Self::from_der_and_sign_algo(private_key_der, alg)?)
 	}
 
@@ -1510,7 +1510,7 @@ impl KeyPair {
 	/// key pair. However sometimes multiple signature algorithms fit for the
 	/// same der key. In that instance, you can use this function to precisely
 	/// specify the `SignatureAlgorithm`.
-	pub fn from_der_and_sign_algo(pkcs8 :&[u8], alg :&'static SignatureAlgorithm) -> Result<Self, RcgenError> {
+	pub fn from_der_and_sign_algo(pkcs8: &[u8], alg :&'static SignatureAlgorithm) -> Result<Self, RcgenError> {
 		let pkcs8_vec = pkcs8.to_vec();
 
 		let kind = if alg == &PKCS_ED25519 {
@@ -1567,7 +1567,7 @@ pub trait RemoteKeyPair {
 	fn public_key(&self) -> &[u8];
 
 	/// Signs `msg` using the selected algorithm
-	fn sign(&self, msg :&[u8]) -> Result<Vec<u8>, RcgenError>;
+	fn sign(&self, msg: &[u8]) -> Result<Vec<u8>, RcgenError>;
 
 	/// Reveals which algorithm will be used when you call `sign()`
 	fn algorithm(&self) -> &'static SignatureAlgorithm;
@@ -1740,7 +1740,7 @@ impl KeyPair {
 			-> impl Iterator<Item=&'static SignatureAlgorithm> {
 		std::iter::once(self.alg)
 	}
-	fn sign(&self, msg :&[u8], writer: DERWriter) -> Result<(), RcgenError> {
+	fn sign(&self, msg: &[u8], writer: DERWriter) -> Result<(), RcgenError> {
 		match &self.kind {
 			KeyPairKind::Ec(kp) => {
 				let system_random = SystemRandom::new();
@@ -1912,7 +1912,7 @@ impl Hash for SignatureAlgorithm {
 
 impl SignatureAlgorithm {
 	fn iter() -> std::slice::Iter<'static, &'static SignatureAlgorithm> {
-		static ALGORITHMS :&[&SignatureAlgorithm] = &[
+		static ALGORITHMS: &[&SignatureAlgorithm] = &[
 			&PKCS_RSA_SHA256,
 			&PKCS_RSA_SHA384,
 			&PKCS_RSA_SHA512,
@@ -1925,7 +1925,7 @@ impl SignatureAlgorithm {
 	}
 
 	/// Retrieve the SignatureAlgorithm for the provided OID
-	pub fn from_oid(oid :&[u64]) -> Result<&'static SignatureAlgorithm, RcgenError> {
+	pub fn from_oid(oid: &[u64]) -> Result<&'static SignatureAlgorithm, RcgenError> {
 		for algo in Self::iter() {
 			if algo.oid_components == oid {
 				return Ok(algo);
@@ -1938,7 +1938,7 @@ impl SignatureAlgorithm {
 
 /// RSA signing with PKCS#1 1.5 padding and SHA-256 hashing as per [RFC 4055](https://tools.ietf.org/html/rfc4055)
 pub static PKCS_RSA_SHA256: SignatureAlgorithm = SignatureAlgorithm {
-	oids_sign_alg :&[&OID_RSA_ENCRYPTION],
+	oids_sign_alg: &[&OID_RSA_ENCRYPTION],
 	sign_alg: SignAlgo::Rsa(),
 	// sha256WithRSAEncryption in RFC 4055
 	oid_components : &[1, 2, 840, 113549, 1, 1, 11],
@@ -1947,7 +1947,7 @@ pub static PKCS_RSA_SHA256: SignatureAlgorithm = SignatureAlgorithm {
 
 /// RSA signing with PKCS#1 1.5 padding and SHA-256 hashing as per [RFC 4055](https://tools.ietf.org/html/rfc4055)
 pub static PKCS_RSA_SHA384: SignatureAlgorithm = SignatureAlgorithm {
-	oids_sign_alg :&[&OID_RSA_ENCRYPTION],
+	oids_sign_alg: &[&OID_RSA_ENCRYPTION],
 	sign_alg: SignAlgo::Rsa(),
 	// sha384WithRSAEncryption in RFC 4055
 	oid_components : &[1, 2, 840, 113549, 1, 1, 12],
@@ -1956,7 +1956,7 @@ pub static PKCS_RSA_SHA384: SignatureAlgorithm = SignatureAlgorithm {
 
 /// RSA signing with PKCS#1 1.5 padding and SHA-512 hashing as per [RFC 4055](https://tools.ietf.org/html/rfc4055)
 pub static PKCS_RSA_SHA512: SignatureAlgorithm = SignatureAlgorithm {
-	oids_sign_alg :&[&OID_RSA_ENCRYPTION],
+	oids_sign_alg: &[&OID_RSA_ENCRYPTION],
 	sign_alg: SignAlgo::Rsa(),
 	// sha512WithRSAEncryption in RFC 4055
 	oid_components : &[1, 2, 840, 113549, 1, 1, 13],
@@ -1972,7 +1972,7 @@ pub static PKCS_RSA_SHA512: SignatureAlgorithm = SignatureAlgorithm {
 static PKCS_RSA_PSS_SHA256: SignatureAlgorithm = SignatureAlgorithm {
 	// We could also use OID_RSA_ENCRYPTION here, but it's recommended
 	// to use ID-RSASSA-PSS if possible.
-	oids_sign_alg :&[&OID_RSASSA_PSS],
+	oids_sign_alg: &[&OID_RSASSA_PSS],
 	sign_alg: SignAlgo::Rsa(),
 	oid_components : &OID_RSASSA_PSS,//&[1, 2, 840, 113549, 1, 1, 13],
 	// rSASSA-PSS-SHA256-Params in RFC 4055
@@ -1985,7 +1985,7 @@ static PKCS_RSA_PSS_SHA256: SignatureAlgorithm = SignatureAlgorithm {
 
 /// ECDSA signing using the P-256 curves and SHA-256 hashing as per [RFC 5758](https://tools.ietf.org/html/rfc5758#section-3.2)
 pub static PKCS_ECDSA_P256_SHA256: SignatureAlgorithm = SignatureAlgorithm {
-	oids_sign_alg :&[&OID_EC_PUBLIC_KEY, &OID_EC_SECP_256_R1],
+	oids_sign_alg: &[&OID_EC_PUBLIC_KEY, &OID_EC_SECP_256_R1],
 	sign_alg: SignAlgo::EcDsa(&signature::ECDSA_P256_SHA256_ASN1_SIGNING),
 	/// ecdsa-with-SHA256 in RFC 5758
 	oid_components : &[1, 2, 840, 10045, 4, 3, 2],
@@ -1994,7 +1994,7 @@ pub static PKCS_ECDSA_P256_SHA256: SignatureAlgorithm = SignatureAlgorithm {
 
 /// ECDSA signing using the P-384 curves and SHA-384 hashing as per [RFC 5758](https://tools.ietf.org/html/rfc5758#section-3.2)
 pub static PKCS_ECDSA_P384_SHA384: SignatureAlgorithm = SignatureAlgorithm {
-	oids_sign_alg :&[&OID_EC_PUBLIC_KEY, &OID_EC_SECP_384_R1],
+	oids_sign_alg: &[&OID_EC_PUBLIC_KEY, &OID_EC_SECP_384_R1],
 	sign_alg: SignAlgo::EcDsa(&signature::ECDSA_P384_SHA384_ASN1_SIGNING),
 	/// ecdsa-with-SHA384 in RFC 5758
 	oid_components : &[1, 2, 840, 10045, 4, 3, 3],
@@ -2006,7 +2006,7 @@ pub static PKCS_ECDSA_P384_SHA384: SignatureAlgorithm = SignatureAlgorithm {
 /// ED25519 curve signing as per [RFC 8410](https://tools.ietf.org/html/rfc8410)
 pub static PKCS_ED25519: SignatureAlgorithm = SignatureAlgorithm {
 	/// id-Ed25519 in RFC 8410
-	oids_sign_alg :&[&[1, 3, 101, 112]],
+	oids_sign_alg: &[&[1, 3, 101, 112]],
 	sign_alg: SignAlgo::EdDsa(&signature::ED25519),
 	/// id-Ed25519 in RFC 8410
 	oid_components : &[1, 3, 101, 112],
@@ -2041,7 +2041,7 @@ impl SignatureAlgorithm {
 					writer.next().write_tagged(Tag::context(1), |writer| {
 						writer.write_sequence(|writer| {
 							// id-mgf1 in RFC 4055
-							const ID_MGF1 :&[u64] = &[1, 2, 840, 113549, 1, 1, 8];
+							const ID_MGF1: &[u64] = &[1, 2, 840, 113549, 1, 1, 8];
 							let oid = ObjectIdentifier::from_slice(ID_MGF1);
 							writer.next().write_oid(&oid);
 							writer.next().write_sequence(|writer| {

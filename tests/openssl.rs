@@ -1,3 +1,8 @@
+use std::io::{Write, Read, Result as ioResult, ErrorKind,
+			  Error};
+use std::cell::RefCell;
+use std::rc::Rc;
+
 use rcgen::{Certificate, NameConstraints, GeneralSubtree, IsCa,
 	BasicConstraints, CertificateParams, DnType, DnValue};
 use openssl::pkey::PKey;
@@ -6,10 +11,6 @@ use openssl::x509::store::{X509StoreBuilder, X509Store};
 use openssl::ssl::{SslMethod, SslConnector,
 	SslAcceptor, HandshakeError};
 use openssl::stack::Stack;
-use std::io::{Write, Read, Result as ioResult, ErrorKind,
-	Error};
-use std::cell::RefCell;
-use std::rc::Rc;
 
 mod util;
 
@@ -90,7 +91,7 @@ fn verify_cert(cert: &Certificate) {
 	verify_cert_ca(&cert_pem, &key, &cert_pem);
 }
 
-fn verify_cert_ca(cert_pem: &str, key :&[u8], ca_cert_pem: &str) {
+fn verify_cert_ca(cert_pem: &str, key: &[u8], ca_cert_pem: &str) {
 	println!("{}", cert_pem);
 	println!("{}", ca_cert_pem);
 
@@ -147,8 +148,8 @@ fn verify_cert_ca(cert_pem: &str, key :&[u8], ca_cert_pem: &str) {
 		}
 	};
 
-	const HELLO_FROM_SRV :&[u8] = b"hello from server";
-	const HELLO_FROM_CLN :&[u8] = b"hello from client";
+	const HELLO_FROM_SRV: &[u8] = b"hello from server";
+	const HELLO_FROM_CLN: &[u8] = b"hello from client";
 
 	ssl_srv_stream.ssl_write(HELLO_FROM_SRV).unwrap();
 	ssl_cln_stream.ssl_write(HELLO_FROM_CLN).unwrap();

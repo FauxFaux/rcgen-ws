@@ -1,8 +1,9 @@
 mod util;
 
-use rcgen::{RcgenError, KeyPair, Certificate};
 use std::hash::{Hash, Hasher};
 use std::collections::hash_map::DefaultHasher;
+
+use rcgen::{RcgenError, KeyPair, Certificate};
 
 fn generate_hash<T: Hash>(subject: &T) -> u64 {
 	let mut hasher = DefaultHasher::new();
